@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors({
-    origin: ["http://localhost:3000", "http://localhost:5000"]
+    origin: ["http://localhost:3000", "http://localhost:5000", "https://tic-tac-toe-by-vinay.vercel.app/"]
 }));
 
 mongoose.set('strictQuery', false);
