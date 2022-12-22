@@ -1,0 +1,12 @@
+.X{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.X > div{
+    position: absolute !important;
+    background: #2C8DFF;
+    border-radius: 63.9998px;
+    rotate: 45deg;
+    border: none;
+}

@@ -1,0 +1,18 @@
+.arrow-box{
+    width: 24px;
+    height: 24px;
+    opacity: 0.87;
+    margin: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.arrow-left{
+    border: solid black;
+    border-width: 0 2.62px 2.62px 0;
+    padding: 6.25px;
+    display: inline-block;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}

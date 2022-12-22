@@ -1,0 +1,10 @@
+.circle{
+    box-sizing: border-box;
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    top: 20%;
+    bottom: 20%;
+    border: 15.75px solid #FF4F4F;
+    border-radius: 50%;
+}

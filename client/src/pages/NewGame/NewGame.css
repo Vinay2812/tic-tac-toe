@@ -1,0 +1,62 @@
+.newgame-small-title{
+    position: absolute;
+    width: 126px;
+    height: 14px;
+    left: 24px;
+    top: 75px;
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 14px;
+    color: #333333;
+}
+
+.newgame-large-title{
+    position: absolute;
+    width: 255px;
+    height: 64px;
+    left: 24px;
+    top: 98px;
+
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 32px;
+    /* or 114% */
+
+    letter-spacing: -0.05em;
+
+    /* Dark Grey */
+
+    color: #333333;
+}
+.email-label{
+    position: absolute;
+    width: 38px;
+    height: 14px;
+    left: 24px;
+    top: 202px;
+
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 14px;
+
+    /* Dark Grey */
+
+    color: #333333;
+}
+
+.game-input{
+    position: absolute;
+    width: calc(312px - 32px);
+    top: calc(228px - 12px);
+}
+.start-game-btn{
+    position: absolute;
+    background-color: #F2C94C;
+    bottom: 14px;
+}

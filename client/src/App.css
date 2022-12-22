@@ -1,0 +1,58 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+input{
+  outline: none;
+  border: none;
+}
+input:focus{
+  outline: none;
+}
+a{
+  text-decoration: none;
+  color: inherit;
+}
+.app{
+  background: #F5F5F5;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  overflow: scroll;
+}
+
+.container{
+  width: 360px;
+  height: 720px;
+  background-color: #FFFFFF;
+  position: relative;
+  overflow: scroll;
+}
+
+button{
+  border: none;
+}
+
+.button{
+  height: 56px;
+  width: 328px;
+  margin: 0 16px;
+  box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+  font-family: 'Epilogue';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar{
+  display: none;
+}

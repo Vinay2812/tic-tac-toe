@@ -1,0 +1,16 @@
+.toast{
+    position: absolute;
+    width: 312px;
+    height: 74px;
+    bottom: 86px;
+    left: 16px;
+    border-radius: 8px;
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+    padding-left: 16px;
+}

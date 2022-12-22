@@ -1,0 +1,93 @@
+.opponent{
+    position: absolute;
+    width: 300px;
+    height: 32px;
+    left: 24px;
+    top: 72px;
+
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 32px;
+    /* identical to box height, or 114% */
+
+    letter-spacing: -0.05em;
+
+    /* Dark Grey */
+
+    color: #333333;
+}
+
+.peice-title{
+    position: absolute;
+    width: 73px;
+    height: 18px;
+    left: 24px;
+    top: 112px;
+
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    /* identical to box height, or 129% */
+
+
+    color: #333333;
+}
+
+.peice{
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    left: 24px;
+    top: 138px;
+}
+
+.game-area{
+    position: absolute;
+    top: 210px;
+    height: 381.5px;
+    width: 327.88px;
+    background-color: #FFE79E;
+    left: 16px;
+}
+
+.game-title{
+    width: 100%;
+    height: 47.29px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18.9159px;
+    line-height: 22px;
+    text-align: center;
+    color: #212121;
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: 105.09px 105.09px 105.09px;
+    grid-template-rows: 105.09px 105.09px 105.09px;
+    gap: 6.31px;
+    z-index: -1;
+    margin-top: 6.31px;
+}
+.grid-item{
+    z-index: 1;
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+}
+
+.game-btn{
+    position: absolute;
+    background: #F2C94C;
+    bottom: 16px;
+}
