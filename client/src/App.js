@@ -19,9 +19,9 @@ function App() {
           <Route path="/auth" element={user ? <Navigate to="../home" /> : <Auth />} />
           <Route path="/auth/login" element={user ? <Navigate to="/home" /> : <Login />} />
           <Route path="/auth/register" element={user ? <Navigate to="/home" /> : <Register />} />
-          <Route path="/home" element={user ? <Home /> : <Navigate to="/auth" />} />
-          <Route path="/new-game" element={user ? <NewGame /> : <Navigate to="/auth" />} />
-          <Route path="/game/:gameId" element={user ? <Game /> : <Navigate to="/auth" />} />
+          <Route path="/home" element={user ? <Home /> : <Navigate to="../auth" />} />
+          <Route path="/new-game" element={user ? <NewGame /> : <Navigate to="../auth" />} />
+          <Route path="/game/:gameId" element={user ? <Game /> : <Navigate to="../auth" />} />
         </Routes>
       </BrowserRouter>
     </div>
