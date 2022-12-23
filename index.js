@@ -3,8 +3,6 @@ import cors from "cors"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
 import * as path from 'path';
-import { join , dirname} from "path";
-
 import AuthRoute from "./routes/AuthRoute.js"
 import GameRoute from "./routes/GameRoute.js"
 import { fileURLToPath } from "url";
@@ -27,13 +25,11 @@ mongoose.connect(process.env.MONGODB, ()=>{
 // Routes
 app.use("/auth", AuthRoute);
 app.use("/game", GameRoute);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
-app.use(express.static(join(__dirname, "/client/build")));
+app.use(express.static(path.join(__dirname, "/client/build")));
 
 app.get("*", (req, res)=>{
-    res.sendFile(join(__dirname, "/client/build", "index.html"));
+    res.sendFile(path.join(__dirname, "/client/build", "index.html"));
 });
 
 app.listen(process.env.PORT, ()=>{

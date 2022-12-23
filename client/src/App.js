@@ -2,7 +2,7 @@ import './App.css';
 import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import Auth from './pages/Auth/Auth';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import Home from './pages/Home/Home';
 import NewGame from './pages/NewGame/NewGame';
 import Game from './pages/Game/Game';
