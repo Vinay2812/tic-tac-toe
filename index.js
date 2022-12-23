@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors({
-    origin: "*"
+    origin: ["http://localhost:3000", "https://tic-tac-toe-xzd7.onrender.com"]
 }));
 
 mongoose.set('strictQuery', false);
