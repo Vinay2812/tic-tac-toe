@@ -13,7 +13,6 @@ function App() {
 
   return (
     <div className="app">
-      <BrowserRouter>
         <Routes>
           <Route path="/" element={user ? <Navigate to="/home" /> : <Navigate to="/auth" />} />
           <Route path="/auth" element={user ? <Navigate to="../home" /> : <Auth />} />
@@ -23,7 +22,6 @@ function App() {
           <Route path="/new-game" element={user ? <NewGame /> : <Navigate to="../auth" />} />
           <Route path="/game/:gameId" element={user ? <Game /> : <Navigate to="../auth" />} />
         </Routes>
-      </BrowserRouter>
     </div>
   );
 }
