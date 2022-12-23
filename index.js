@@ -5,8 +5,9 @@ import mongoose from "mongoose"
 import * as path from 'path';
 import AuthRoute from "./routes/AuthRoute.js"
 import GameRoute from "./routes/GameRoute.js"
-import { fileURLToPath } from "url";
+import * as url from 'url';
 
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 dotenv.config()
 const app = express();
