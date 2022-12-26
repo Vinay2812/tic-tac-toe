@@ -31,7 +31,6 @@ if(!process.env.NODE_ENV){
     app.use(express.static(path.join(__dirname, "\\client\\build")));
 
     app.get("*", (req, res)=>{
-        console.log(path.join(__dirname, "\\client\\build", "index.html"));
         res.sendFile(path.join(__dirname, "\\client\\build", "index.html"));
     });
 }
