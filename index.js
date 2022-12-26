@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors({
-    origin: ["http://localhost:3000", "https://tic-tac-toe-xzd7.onrender.com"]
+    origin: ["http://localhost:3000", "https://tic-tac-toe-xzd7.onrender.com", "https://tic-tac-toe-api-dq0i.onrender.com/"]
 }));
 
 mongoose.set('strictQuery', false);
@@ -28,10 +28,10 @@ app.use("/auth", AuthRoute);
 app.use("/game", GameRoute);
 
 if(process.env.NODE_ENV){
-    app.use(express.static(path.join(__dirname, "\\client\\build")));
+    app.use(express.static(path.join(__dirname, path.join("client", "build"))));
 
     app.get("*", (req, res)=>{
-        res.sendFile(path.join(__dirname, "\\client\\build", "index.html"));
+        res.sendFile(path.join(__dirname, path.join(path.join("client", "index.html"), "index.html")));
     });
 }
 
