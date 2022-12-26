@@ -27,12 +27,12 @@ mongoose.connect(process.env.MONGODB, ()=>{
 app.use("/auth", AuthRoute);
 app.use("/game", GameRoute);
 
-if(process.env.NODE_ENV){
-    app.use(express.static(path.join(__dirname, "/client/build")));
+if(!process.env.NODE_ENV){
+    app.use(express.static(path.join(__dirname, "\\client\\build")));
 
     app.get("*", (req, res)=>{
-        console.log(__dirname);
-        res.sendFile(path.join(__dirname, "/client/build", "index.html"));
+        console.log(path.join(__dirname, "\\client\\build", "index.html"));
+        res.sendFile(path.join(__dirname, "\\client\\build", "index.html"));
     });
 }
 
