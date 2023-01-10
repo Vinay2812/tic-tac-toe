@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ActionBar from "../../components/ActionBar/ActionBar";
 import "./NewGame.css";
 import { useState } from "react";
@@ -6,6 +6,7 @@ import { startGame } from "../../api/GameRequest";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Toast from "../../components/Toast/Toast"
+import { getGame } from "../../actions/GameAction";
 
 const NewGame = () => {
     const [email, setEmail] = useState("");
@@ -23,12 +24,15 @@ const NewGame = () => {
 
     const {_id} = useSelector((state)=>state.AuthReducer.authData)
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = async(e)=>{
         e.preventDefault();
         try {
           const {data} = await startGame({email: email, userId: _id});
           const gameId = data._id;
+          const otherId = data.userIds.filter((id)=>id!==_id)[0];
+          dispatch(getGame(gameId, otherId));
           navigate(`/game/${gameId}`);
         } catch (err) {
           setError(true);

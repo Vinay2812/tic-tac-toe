@@ -61,6 +61,7 @@ export const updateMove = async (req, res)=>{
     const { position, gameCompleted, winnerId, myId, otherId, time } = req.body;
     try {
         const game = await GameModel.findById(gameId);
+        console.log(game);
         if(game.currentTurn === game.positions[0].id){
             await game.updateOne(
                 {
@@ -78,7 +79,7 @@ export const updateMove = async (req, res)=>{
         await game.updateOne(
             {
                 $set: {
-                    isGameOn: gameCompleted === true,
+                    isGameOn: gameCompleted === false,
                     winnerId: winnerId,
                     lastUpdate: time,
                     currentTurn: game.currentTurn === myId ? otherId : myId
@@ -104,6 +105,7 @@ export const updateMove = async (req, res)=>{
                 }
             )
         }
+        console.log(game);
         res.status(200).json(game);
 
     } catch (err) {
@@ -147,7 +149,8 @@ export const getUser = async(req, res)=>{
     const {userId} = req.params;
     try {
         const user = await UserModel.findById(userId);
-        res.status(200).json(user);
+        const {password, ...others} = user._doc;
+        res.status(200).json(others);
     } catch (err) {
         res.status(500).json(err);
     }

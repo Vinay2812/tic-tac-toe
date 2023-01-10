@@ -2,8 +2,9 @@ import { useState } from "react";
 import "./GameCard.css"
 import { useEffect } from "react";
 import { getUser } from "../../api/GameRequest";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
+import { getGame } from "../../actions/GameAction";
 
 const GameCard = ({gameData}) => {
   const [opponentName, setOpponentName] = useState("");
@@ -13,16 +14,28 @@ const GameCard = ({gameData}) => {
   const myId = useSelector((state)=>state.AuthReducer.authData._id);
   const otherId = gameData.userIds.filter((id)=>id!==myId)[0];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e)=>{
     e.preventDefault();
-    navigate(`/game/${gameData._id}`)
+    try {
+      dispatch(getGame(gameData._id, otherId));
+      navigate(`/game/${gameData._id}`)
+    } catch (err) {
+      console.log(err);
+    }
   }
   useEffect(()=>{
     const fetchUser = async()=>{
       try {
         const {data} = await getUser(otherId);
-        setOpponentName(data.name);
+        console.log(data);
+        if(data.name.length <= 8){
+          setOpponentName(data.name);
+        }
+        else{
+          setOpponentName(data.name.substring(0, Math.min(7, data.name.length))+ "...")
+        }
       } catch (err) {
         console.log(err);
       }

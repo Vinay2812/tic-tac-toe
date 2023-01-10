@@ -28,13 +28,12 @@ app.use("/auth", AuthRoute);
 app.use("/game", GameRoute);
 
 if(process.env.NODE_ENV){
-    app.use(express.static(path.join(__dirname, path.join("client", "build"))));
+    app.use(express.static(path.join(__dirname, "client", "build")));
 
     app.get("*", (req, res)=>{
-        res.sendFile(path.join(__dirname, path.join(path.join("client", "build"), "index.html")));
+        res.sendFile(path.join(__dirname, "client", "build", "index.html"));
     });
 }
-
 
 app.listen(process.env.PORT, ()=>{
     console.log(`Listening on port ${process.env.PORT}`)

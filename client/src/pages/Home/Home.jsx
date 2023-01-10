@@ -21,7 +21,7 @@ const Home = () => {
       setAllGames(data);
     }
     fetchGames();
-  }, [])
+  }, [userId])
   return (
     <div className="container">
       <div className="home-title">Your Games</div>

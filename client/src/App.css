@@ -37,6 +37,9 @@ a{
 button{
   border: none;
 }
+button:hover{
+  opacity: 0.9;
+}
 
 .button{
   height: 56px;

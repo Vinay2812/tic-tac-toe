@@ -2,12 +2,11 @@ import ActionBar from "../../components/ActionBar/ActionBar";
 import X from "../../components/X/X";
 import "./Game.css";
 import O from "../../components/O/O";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useState } from "react";
-import { getUser, updateMove } from "../../api/GameRequest";
-import { getGame } from "../../actions/GameAction";
+// import { updateMove } from "../../api/GameRequest";
 import { useDispatch, useSelector } from "react-redux";
+import { getGame, updateMove } from "../../actions/GameAction";
 
 const XIcon = () => {
   return <X width={16.2} height={72.89} dimension={105} />;
@@ -18,41 +17,77 @@ const OIcon = () => {
 };
 
 const Game = () => {
-  const params = useParams();
-  const { gameId } = params;
   const dispatch = useDispatch();
-  const { gameData } = useSelector((state) => state.GameReducer);
-  const [opponentName, setOpponentName] = useState("");
+  const gameData = useSelector((state) => state.GameReducer.game?.gameData);
+  const opponentData = useSelector(
+    (state) => state.GameReducer.game?.opponentData
+  );
+  const opponentName = opponentData?.name;
+  let boardPositions = useMemo(() => [2, 2, 2, 2, 2, 2, 2, 2, 2], [gameData]);
+  const [tempBoardPositions, setTempBoardPositions] = useState(
+    new Array(...boardPositions)
+  );
+  const myId = useSelector((state) => state.AuthReducer.authData._id);
 
+  const [myTurn, setMyTurn] = useState(false);
+  const [gameTitle, setGameTitle] = useState("");
 
   useEffect(() => {
-    dispatch(getGame(gameId)).then(()=>{
-      try {
-          const getOtherUser = async () => {
-          getUser(gameData?.userIds.filter((uId) => myId !== uId)[0]).then(
-            (res) => {
-              setOpponentName(res.data.name);
-            }
-            );
-          };
-          getOtherUser();
-        } catch (err) {
-          console.log(err);
+    if(!gameData)return;
+
+    const player1Positions = gameData.positions[0].places;
+    const player2Positions = gameData.positions[1].places;
+
+    if (!player1Positions) return;
+
+    if (gameData.positions[0].id === myId) {
+      player1Positions.forEach((position) => {
+        if (position >= 0) {
+          boardPositions[position] = 0;
         }
-    });
-    
-  }, [gameId]);
+      });
+      player2Positions.forEach((position) => {
+        if (position >= 0) {
+          boardPositions[position] = 1;
+        }
+      });
+    } else {
+      player1Positions.forEach((position) => {
+        if (position >= 0) {
+          boardPositions[position] = 1;
+        }
+      });
+      player2Positions.forEach((position) => {
+        if (position >= 0) {
+          boardPositions[position] = 0;
+        }
+      });
+    }
 
-  const myId = useSelector((state) => state.AuthReducer.authData._id);
-  const otherId = gameData?.userIds.filter((uId) => myId !== uId)[0];
+    setMyTurn(gameData.currentTurn === myId);
 
-  const [myTurn, setMyTurn] = useState(gameData?.currentTurn === myId);
+    if(gameData.isGameOn){
+      if(gameData.currentTurn === myId){
+        setGameTitle("Your turn!");
+      }
+      else{
+        setGameTitle(`${opponentName} turn!`);
+      }
+    }
+    else{
+      if(gameData.winnerId === null){
+        setGameTitle("Draw!")
+      }
+      else if(gameData.winnerId === myId){
+        setGameTitle("You win!");
+      }
+      else{
+        setGameTitle("You loose!");
+      }
+    }
+  }, [gameData, myId]);
 
-  // 0->current | 1->opponent | 2->not placed
-
-  const [place, setPlace] = useState(-1);
-
-  const checkWin = () => {
+  const getGameStatus = () => {
     const winPositions = [
       [0, 1, 2],
       [3, 4, 5],
@@ -64,143 +99,120 @@ const Game = () => {
       [2, 4, 6],
     ];
 
-    for (let win in winPositions) {
-      for(let pos=0;pos<=1;pos++){
-        if(gameData?.positions[pos].places.includes(win[0]) && gameData?.positions[pos].places.includes(win[1]) && gameData?.positions[pos].places.includes(win[2])){
-          if(gameData?.positions[pos].id === myId){
-            return 0;
-          }
-          else{
-            return 1;
-          }
-        }
+    for(var win in winPositions){
+      if(boardPositions[win[0]] !==2 && boardPositions[win[0]] === boardPositions[win[1]] && boardPositions[win[1]] === boardPositions[win[2]]){
+        return boardPositions[win[0]];// Either 0 or 1 -> 0: You, 1: Opponent 
       }
     }
 
-    if(gameData?.positions[0].places.length + gameData?.positions[1].places.length === 9){
-      return 2;
+    for(var i=0;i<=8;i++){
+      if(boardPositions[i] === 2){
+        return 2; // game can be played
+      }
     }
-    return 1;
-  
+
+    return 3; // draw
   };
-  const placeItem = (currentPlace) => {
-    if(gameData?.positions[0].id === myId){
-      gameData?.positions[0].places.push(currentPlace);
-    }
-    else{
-      gameData?.positions[1].places.push(currentPlace);
+
+  const [updatedPosition, setUpdatedPosition] = useState(null);
+
+  const handleSubmit = (e) => {
+    for (var i = 0; i <= 8; i++) {
+      if (tempBoardPositions[i] !== boardPositions[i]) {
+        setUpdatedPosition(i);
+        console.log(i);
+        break;
+      }
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const gameStatus = checkWin();
-      const updateData = {
-        position: place,
-        gameCompleted: gameStatus !== 4,
-        winnerId:
-          gameStatus === 0 || gameStatus === 1
-            ? gameStatus === 0
-              ? myId
-              : otherId
-            : null,
-        myId: myId,
-        otherId: gameData?.userIds.filter((uId) => myId !== uId)[0],
-        time: new Date(),
+  useEffect(() => {
+    const updateBoard = () => {
+      const gameSituation = getGameStatus();
+      console.log(gameSituation);
+      const currGameData = {
+        position: updatedPosition,
+        gameCompleted: gameSituation !==2,
+        winnerId: gameSituation === 0 ? myId : gameSituation === 1 ? opponentData._id : null,
+        myId,
+        otherId: opponentData._id,
+        time: Date.now(),
       };
+      console.log(gameData);
+      dispatch(updateMove(gameData._id, currGameData));
+    };
+    if (updatedPosition !==null) {
+      updateBoard();
+      setUpdatedPosition(null);
+    }
+  }, [updatedPosition]);
 
-      updateMove({ gameId, gameData: updateData }).then(() => {
-        dispatch(getGame(gameId)).then(()=>{
-          setMyTurn(gameData?.currentTurn === myId);
-        });
-        setPlace(-1);
-        
-      });
-    } catch (err) {
-      console.log(err);
+  const getIcon = (position) => {
+    switch (tempBoardPositions[position]) {
+      case 0:
+        return <XIcon />;
+      case 1:
+        return <OIcon />;
+      default:
+        return "";
     }
   };
 
-  const getIcon = (boxNo)=>{
-    if(gameData?.positions[0].places.includes(boxNo)){
-      if(gameData?.positions[0].id === myId){
-        return <XIcon />
-      }
-      else{
-        return <OIcon />
-      }
-      
+  const placeIcon = (position) => {
+    if (!myTurn) return;
+    if (tempBoardPositions[position] === 2) {
+      setTempBoardPositions(new Array(...boardPositions));
+      setTempBoardPositions((prev) => {
+        let arr = new Array(...prev);
+        arr[position] = 0;
+        return arr;
+      });
     }
-    if(gameData?.positions[1].places.includes(boxNo)){
-      if(gameData?.positions[1].id === myId){
-        return <XIcon />
-      }
-      else{
-        return <OIcon />
-      }
-    }
-    return "";
-  }
+  };
 
-  const getGameStatus = ()=>{
-    const winStatus = checkWin();
-    if(winStatus === 0){
-      return "You won";
-    }
+  
 
-    if(winStatus === 1){
-      return "You loose"
-    } 
-
-    if(winStatus === 2){
-      return "It's a draw"
-    }
-
-    if(gameData?.currentTurn === myId){
-      return "Your move"
-    }
-
-    return "Their move"
-  }
   return (
     <div className="container">
       <ActionBar path="/home" />
       <div className="opponent">
-        Game With {opponentName ? opponentName : ""}
+        Game With{" "}
+        {opponentName?.length <= 8
+          ? opponentName
+          : opponentName?.substring(0, 7) + "..."}
       </div>
       <div className="peice-title">Your peice</div>
       <div className="peice">
         <X width={9.86} height={44.39} dimension={64} />
       </div>
       <div className="game-area">
-        <div className="game-title">{getGameStatus()}</div>
+        <div className="game-title">{gameTitle}</div>
         <div className="grid-container">
-          <div className="grid-item" id="0" onClick={() => placeItem(0)}>
+          <div className="grid-item" onClick={() => placeIcon(0)} id="0">
             {getIcon(0)}
           </div>
-          <div className="grid-item" id="1" onClick={() => placeItem(1)}>
+          <div className="grid-item" onClick={() => placeIcon(1)} id="1">
             {getIcon(1)}
           </div>
-          <div className="grid-item" id="2" onClick={() => placeItem(2)}>
+          <div className="grid-item" onClick={() => placeIcon(2)} id="2">
             {getIcon(2)}
           </div>
-          <div className="grid-item" id="3" onClick={() => placeItem(3)}>
+          <div className="grid-item" onClick={() => placeIcon(3)} id="3">
             {getIcon(3)}
           </div>
-          <div className="grid-item" id="4" onClick={() => placeItem(4)}>
+          <div className="grid-item" onClick={() => placeIcon(4)} id="4">
             {getIcon(4)}
           </div>
-          <div className="grid-item" id="5" onClick={() => placeItem(5)}>
+          <div className="grid-item" onClick={() => placeIcon(5)} id="5">
             {getIcon(5)}
           </div>
-          <div className="grid-item" id="6" onClick={() => placeItem(6)}>
+          <div className="grid-item" onClick={() => placeIcon(6)} id="6">
             {getIcon(6)}
           </div>
-          <div className="grid-item" id="7" onClick={() => placeItem(7)}>
+          <div className="grid-item" onClick={() => placeIcon(7)} id="7">
             {getIcon(7)}
           </div>
-          <div className="grid-item" id="8" onClick={() => placeItem(8)}>
+          <div className="grid-item" onClick={() => placeIcon(8)} id="8">
             {getIcon(8)}
           </div>
         </div>
@@ -208,8 +220,8 @@ const Game = () => {
       <button
         className="button game-btn"
         onClick={handleSubmit}
-        disabled={!myTurn}
-        style={!myTurn ? {backgroundColor: "#E0E0E0"} : {}}
+        disabled={myTurn === false}
+        style={myTurn === false ? { backgroundColor: "#E0E0E0" } : {}}
       >
         Submit
       </button>
