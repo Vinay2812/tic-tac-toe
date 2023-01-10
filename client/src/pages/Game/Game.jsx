@@ -19,22 +19,15 @@ const OIcon = () => {
 const Game = () => {
   const dispatch = useDispatch();
   const gameData = useSelector((state) => state.GameReducer.game?.gameData);
+  const myId = useSelector((state) => state.AuthReducer.authData._id);
   const opponentData = useSelector(
     (state) => state.GameReducer.game?.opponentData
   );
   const opponentName = opponentData?.name;
-  let boardPositions = useMemo(() => [2, 2, 2, 2, 2, 2, 2, 2, 2], [gameData]);
-  const [tempBoardPositions, setTempBoardPositions] = useState(
-    new Array(...boardPositions)
-  );
-  const myId = useSelector((state) => state.AuthReducer.authData._id);
 
-  const [myTurn, setMyTurn] = useState(false);
-  const [gameTitle, setGameTitle] = useState("");
-
-  useEffect(() => {
-    if(!gameData)return;
-
+  let boardPositions = useMemo(() =>{
+    let arr = [2, 2, 2, 2, 2, 2, 2, 2, 2];
+    if(!gameData)return arr;
     const player1Positions = gameData.positions[0].places;
     const player2Positions = gameData.positions[1].places;
 
@@ -43,29 +36,42 @@ const Game = () => {
     if (gameData.positions[0].id === myId) {
       player1Positions.forEach((position) => {
         if (position >= 0) {
-          boardPositions[position] = 0;
+          arr[position] = 0;
         }
       });
       player2Positions.forEach((position) => {
         if (position >= 0) {
-          boardPositions[position] = 1;
+          arr[position] = 1;
         }
       });
     } else {
       player1Positions.forEach((position) => {
         if (position >= 0) {
-          boardPositions[position] = 1;
+          arr[position] = 1;
         }
       });
       player2Positions.forEach((position) => {
         if (position >= 0) {
-          boardPositions[position] = 0;
+          arr[position] = 0;
         }
       });
+
+      setTempBoardPositions(...arr);
+      return arr;
     }
+    return arr;
+  }, [gameData, myId]);
+  const [tempBoardPositions, setTempBoardPositions] = useState(
+    new Array(...boardPositions)
+  );
+  
 
+  const [myTurn, setMyTurn] = useState(false);
+  const [gameTitle, setGameTitle] = useState("");
+
+  useEffect(() => {
+    if(!gameData)return;
     setMyTurn(gameData.currentTurn === myId);
-
     if(gameData.isGameOn){
       if(gameData.currentTurn === myId){
         setGameTitle("Your turn!");
@@ -220,8 +226,8 @@ const Game = () => {
       <button
         className="button game-btn"
         onClick={handleSubmit}
-        disabled={myTurn === false}
-        style={myTurn === false ? { backgroundColor: "#E0E0E0" } : {}}
+        disabled={gameData.currentTurn !== myId}
+        style={gameData.currentTurn !== myId ? { backgroundColor: "#E0E0E0" } : {}}
       >
         Submit
       </button>
