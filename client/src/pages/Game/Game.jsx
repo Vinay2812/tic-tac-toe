@@ -226,8 +226,8 @@ const Game = () => {
       <button
         className="button game-btn"
         onClick={handleSubmit}
-        disabled={gameData.currentTurn !== myId}
-        style={gameData.currentTurn !== myId ? { backgroundColor: "#E0E0E0" } : {}}
+        disabled={gameData?.currentTurn !== myId}
+        style={gameData?.currentTurn !== myId ? { backgroundColor: "#E0E0E0" } : {}}
       >
         Submit
       </button>
