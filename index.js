@@ -36,5 +36,5 @@ if(process.env.NODE_ENV){
 }
 
 app.listen(process.env.PORT, ()=>{
-    console.log(`Listening on port ${process.env.PORT}`)
+    console.log(`Listening on port ${process.env.PORT}`);
 })

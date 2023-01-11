@@ -10,9 +10,12 @@ export const startGame = async (req, res)=>{
         const currentUser = await UserModel.findById(myId);
         if(otherUser){
             const gameExist = await GameModel.findOne({
-                userIds: {$all: [myId, otherUser._id]}
+                $and:[
+                    {userIds: {$all: [myId, otherUser._id]}},
+                    {isGameOn: true}
+                ]
             });
-
+            // console.log(gameExist);
             if(gameExist){
                 res.status(400).json(`You are already playing with ${otherUser.name}`);
             }
@@ -34,12 +37,12 @@ export const startGame = async (req, res)=>{
                 const game = await newGame.save();
                 await otherUser.updateOne(
                     {
-                        $push: {activeGames: game._id}
+                        $push: {activeGames: game._id.toString()}
                     }
                 )
                 await currentUser.updateOne(
                     {
-                        $push: {activeGames: game._id}
+                        $push: {activeGames: game._id.toString()}
                     }
                 )
                 res.status(200).json(game);
@@ -61,7 +64,7 @@ export const updateMove = async (req, res)=>{
     const { position, gameCompleted, winnerId, myId, otherId, time } = req.body;
     try {
         const game = await GameModel.findById(gameId);
-        console.log(game);
+        // console.log(game);
         if(game.currentTurn === game.positions[0].id){
             await game.updateOne(
                 {
@@ -94,22 +97,23 @@ export const updateMove = async (req, res)=>{
             await currentPlayer.updateOne(
                 {
                     $pull: {activeGames: gameId},
-                    $push: {gameCompleted: gameId}
+                    $push: {completedGames: gameId}
                 }
             )
 
             await otherPlayer.updateOne(
                 {
                     $pull: {activeGames: gameId},
-                    $push: {gameCompleted: gameId}
+                    $push: {completedGames: gameId}
                 }
             )
-        }
-        console.log(game);
-        res.status(200).json(game);
+        };
+
+        const updatedGame = await GameModel.findById(gameId);
+        res.status(200).json(updatedGame);
 
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         res.status(500).json(err);
     }
     

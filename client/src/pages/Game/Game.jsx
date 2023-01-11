@@ -6,7 +6,7 @@ import { useEffect, useMemo } from "react";
 import { useState } from "react";
 // import { updateMove } from "../../api/GameRequest";
 import { useDispatch, useSelector } from "react-redux";
-import { getGame, updateMove } from "../../actions/GameAction";
+import { updateMove } from "../../actions/GameAction";
 
 const XIcon = () => {
   return <X width={16.2} height={72.89} dimension={105} />;
@@ -24,12 +24,16 @@ const Game = () => {
     (state) => state.GameReducer.game?.opponentData
   );
   const opponentName = opponentData?.name;
+  const {loading} = useSelector((state)=>state.AuthReducer);
+  
 
   let boardPositions = useMemo(() =>{
     let arr = [2, 2, 2, 2, 2, 2, 2, 2, 2];
+    if(loading)return arr;
     if(!gameData)return arr;
-    const player1Positions = gameData.positions[0].places;
-    const player2Positions = gameData.positions[1].places;
+
+    const player1Positions = gameData.positions[0]?.places;
+    const player2Positions = gameData.positions[1]?.places;
 
     if (!player1Positions) return;
 
@@ -55,14 +59,12 @@ const Game = () => {
           arr[position] = 0;
         }
       });
-
-      setTempBoardPositions(...arr);
       return arr;
     }
     return arr;
   }, [gameData, myId]);
   const [tempBoardPositions, setTempBoardPositions] = useState(
-    new Array(...boardPositions)
+    new Array(...[2,2,2,2,2,2,2,2,2])
   );
   
 
@@ -71,8 +73,9 @@ const Game = () => {
 
   useEffect(() => {
     if(!gameData)return;
+    setTempBoardPositions(new Array(...boardPositions));
     setMyTurn(gameData.currentTurn === myId);
-    if(gameData.isGameOn){
+    if(gameData.isGameOn === true){
       if(gameData.currentTurn === myId){
         setGameTitle("Your turn!");
       }
@@ -91,7 +94,7 @@ const Game = () => {
         setGameTitle("You loose!");
       }
     }
-  }, [gameData, myId]);
+  }, [gameData, myId, boardPositions,opponentName]);
 
   const getGameStatus = () => {
     const winPositions = [
@@ -104,15 +107,26 @@ const Game = () => {
       [0, 4, 8],
       [2, 4, 6],
     ];
+    let ans = null;
+    // winPositions.forEach((win)=>{
+    //   // console.log(tempBoardPositions[win[0]], tempBoardPositions[win[1]], tempBoardPositions[win[2]]);
+    //   if((tempBoardPositions[win[0]] !==2) && (tempBoardPositions[win[0]] === tempBoardPositions[win[1]]) && (tempBoardPositions[win[1]] === tempBoardPositions[win[2]])){
+    //     ans = tempBoardPositions[win[0]];// Either 0 or 1 -> 0: You, 1: Opponent
+    //   }
+    // });
+    // if(ans){
+    //   // console.log(ans);
+    //   return ans;
+    // }
 
-    for(var win in winPositions){
-      if(boardPositions[win[0]] !==2 && boardPositions[win[0]] === boardPositions[win[1]] && boardPositions[win[1]] === boardPositions[win[2]]){
-        return boardPositions[win[0]];// Either 0 or 1 -> 0: You, 1: Opponent 
+    for(let i=0;i<winPositions.length;i++){
+      const win = winPositions[i];
+      if((tempBoardPositions[win[0]] !==2) && (tempBoardPositions[win[0]] === tempBoardPositions[win[1]]) && (tempBoardPositions[win[1]] === tempBoardPositions[win[2]])){
+        return tempBoardPositions[win[0]];// Either 0 or 1 -> 0: You, 1: Opponent
       }
     }
-
-    for(var i=0;i<=8;i++){
-      if(boardPositions[i] === 2){
+    for(let i=0;i<=8;i++){
+      if(tempBoardPositions[i] === 2){
         return 2; // game can be played
       }
     }
@@ -126,7 +140,6 @@ const Game = () => {
     for (var i = 0; i <= 8; i++) {
       if (tempBoardPositions[i] !== boardPositions[i]) {
         setUpdatedPosition(i);
-        console.log(i);
         break;
       }
     }
@@ -135,7 +148,7 @@ const Game = () => {
   useEffect(() => {
     const updateBoard = () => {
       const gameSituation = getGameStatus();
-      console.log(gameSituation);
+      // console.log(gameSituation);
       const currGameData = {
         position: updatedPosition,
         gameCompleted: gameSituation !==2,
@@ -144,8 +157,8 @@ const Game = () => {
         otherId: opponentData._id,
         time: Date.now(),
       };
-      console.log(gameData);
-      dispatch(updateMove(gameData._id, currGameData));
+      // console.log(currGameData);
+      dispatch(updateMove(gameData?._id, currGameData));
     };
     if (updatedPosition !==null) {
       updateBoard();
@@ -179,7 +192,10 @@ const Game = () => {
   
 
   return (
+    
     <div className="container">
+      {loading ? "Loading...." : 
+      <>
       <ActionBar path="/home" />
       <div className="opponent">
         Game With{" "}
@@ -226,12 +242,15 @@ const Game = () => {
       <button
         className="button game-btn"
         onClick={handleSubmit}
-        disabled={gameData?.currentTurn !== myId}
-        style={gameData?.currentTurn !== myId ? { backgroundColor: "#E0E0E0" } : {}}
+        disabled={gameData?.currentTurn !== myId || gameData?.isGameOn === false}
+        style={gameData?.currentTurn !== myId || gameData?.isGameOn === false ? { backgroundColor: "#E0E0E0" } : {}}
       >
         Submit
       </button>
+      </>
+    }
     </div>
+    
   );
 };
 
