@@ -1,11 +1,12 @@
 import ActionBar from "../../components/ActionBar/ActionBar";
 import X from "../../components/X/X";
 import "./Game.css";
+import GridItem from "../../components/GridItem/GridItem";
 import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateMove } from "../../actions/GameAction";
-import GridItem from "../../components/GridItem/GridItem";
+
 
 const Game = () => {
   const dispatch = useDispatch();
