@@ -28,7 +28,7 @@ This install's the dependancies and generates a build for production.
 ### 3) `Run project locally`
 
 Use command `npm start` to start the server.\
-Open [http://localhost:5000]([http://localhost:5000) to view it in your browser.
+Open [http://localhost:5000](http://localhost:5000) to view it in your browser.
 
 ## Deployed version of the  project
 
