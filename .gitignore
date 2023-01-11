@@ -1,4 +1,4 @@
 # dependencies
 /node_modules
-client/
+client/node_modules/
 .env
