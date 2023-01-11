@@ -16,7 +16,7 @@ Then it will install dependencies for the client and the bilds the app for produ
 
 ## Steps to run the command locally
 
-### 1) `Clone the project using`
+### 1) `Clone the project`
 
 You can clone the repository using `git clone git@github.com:Vinay2812/tic-tac-toe.git tic-tac-toe` command.
 
