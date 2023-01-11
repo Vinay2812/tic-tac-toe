@@ -19,7 +19,7 @@ function loadFromLocalStorage(){
         
         return JSON.parse(serializedStore);
     } catch (e) {
-        console.log(e);
+        // console.log(e);
         return undefined;
     }
 }

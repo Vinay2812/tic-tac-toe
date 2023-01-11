@@ -4,7 +4,6 @@ export const login = (formData) => {
         dispatch({type:"AUTH_START"})
         try {
             const { data } = await AuthApi.login(formData);
-            console.log(data);
             dispatch({type: "AUTH_SUCCESS", data: data});
         } catch (err) {
             dispatch({type:"AUTH_FAILED"})
