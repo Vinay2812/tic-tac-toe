@@ -19,9 +19,9 @@ app.use(cors({
 }));
 
 mongoose.set('strictQuery', false);
-mongoose.connect(process.env.MONGODB, ()=>{
-    console.log("Database connected");
-})
+// mongoose.connect(process.env.MONGODB, ()=>{
+//     console.log("Database connected");
+// })
 
 // Routes
 app.use("/auth", AuthRoute);
@@ -36,5 +36,5 @@ app.get("*", (req, res)=>{
 
 
 app.listen(process.env.PORT || 5000, ()=>{
-    console.log(`Listening on port ${process.env.PORT}`);
+    console.log(`Listening on port ${process.env.PORT || 5000}`);
 })
