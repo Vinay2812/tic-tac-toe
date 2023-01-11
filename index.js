@@ -19,9 +19,9 @@ app.use(cors({
 }));
 
 mongoose.set('strictQuery', false);
-// mongoose.connect(process.env.MONGODB, ()=>{
-//     console.log("Database connected");
-// })
+mongoose.connect(process.env.MONGODB || "mongodb+srv://vinay:brockvs28@cluster0.oldoz.mongodb.net/tic-tac-toe", ()=>{
+    console.log("Database connected");
+})
 
 // Routes
 app.use("/auth", AuthRoute);
