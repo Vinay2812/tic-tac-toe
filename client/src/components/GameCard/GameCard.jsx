@@ -29,7 +29,6 @@ const GameCard = ({gameData}) => {
     const fetchUser = async()=>{
       try {
         const {data} = await getUser(otherId);
-        console.log(data);
         if(data.name.length <= 8){
           setOpponentName(data.name);
         }

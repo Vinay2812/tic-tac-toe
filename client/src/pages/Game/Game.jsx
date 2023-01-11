@@ -51,9 +51,9 @@ const Game = () => {
     setMyTurn(gameData.currentTurn === myId);
     if (gameData.isGameOn === true) {
       if (gameData.currentTurn === myId) {
-        setGameTitle("Your turn!");
+        setGameTitle("Your move!");
       } else {
-        setGameTitle(`${opponentName} turn!`);
+        setGameTitle(`Their move!`);
       }
     } else {
       if (gameData.winnerId === null) {
