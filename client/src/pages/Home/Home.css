@@ -28,7 +28,7 @@
 
 .start-btn{
     position: absolute;
-    bottom: 249px;
+    top: calc(100vh - 249px + 8px);
     background-color: #F2C94C;
 }
 
@@ -43,7 +43,7 @@
     align-items: center;
     gap: 16px;
     overflow-y: scroll;
-    height: calc(720px - 100px);
+    height: calc(100% - 100px);
 }
 
 .floatingButton{

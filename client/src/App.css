@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
 }
+body{
+  overflow-y: hidden;
+}
 
 input{
   outline: none;
@@ -23,15 +26,15 @@ a{
   align-items: center;
   justify-content: center;
   align-content: center;
-  overflow-y: scroll;
+  /* overflow-y: hidden; */
 }
 
 .container{
   width: 360px;
-  height: 720px;
+  height: 100%;
   background-color: #FFFFFF;
   position: relative;
-  overflow: scroll;
+  overflow: auto;
 }
 
 button{
