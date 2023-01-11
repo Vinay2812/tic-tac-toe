@@ -27,14 +27,14 @@ mongoose.connect(process.env.MONGODB, ()=>{
 app.use("/auth", AuthRoute);
 app.use("/game", GameRoute);
 
-if(process.env.NODE_ENV){
-    app.use(express.static(path.join(__dirname, "client", "build")));
 
-    app.get("*", (req, res)=>{
-        res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-    });
-}
+app.use(express.static(path.join(__dirname, "client", "build")));
 
-app.listen(process.env.PORT, ()=>{
+app.get("*", (req, res)=>{
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
+
+
+app.listen(process.env.PORT || 5000, ()=>{
     console.log(`Listening on port ${process.env.PORT}`);
 })
