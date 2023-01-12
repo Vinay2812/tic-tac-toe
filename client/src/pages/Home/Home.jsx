@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "./Home.css";
-// import { Data } from "./dummyData";
 import GameCard from "../../components/GameCard/GameCard";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getAllGames } from "../../api/GameRequest";
+
 
 const Home = () => {
   const [allGames, setAllGames] = useState([]);
@@ -22,6 +22,8 @@ const Home = () => {
     };
     fetchGames();
   }, [userId]);
+
+
   return (
     <div className="container">
       <div className="home-title">Your Games</div>

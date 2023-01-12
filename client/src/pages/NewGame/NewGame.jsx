@@ -16,6 +16,7 @@ const NewGame = () => {
       setError("");
     }, []);
 
+
     const handleChange = (e)=>{
         e.preventDefault();
         setEmail(e.target.value);
@@ -37,8 +38,9 @@ const NewGame = () => {
         } catch (err) {
           setError(true);
         }
-        
     }
+
+    
   return (
     <div className="container">
       <ActionBar path={"/home"} />

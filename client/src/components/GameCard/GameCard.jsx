@@ -19,8 +19,8 @@ const GameCard = ({gameData}) => {
   const handleSubmit = (e)=>{
     e.preventDefault();
     try {
-      dispatch(getGame(gameData._id, otherId));
-      navigate(`/game/${gameData._id}`)
+      dispatch(getGame(gameData?._id, otherId));
+      navigate(`/game/${gameData?._id}`)
     } catch (err) {
       console.log(err);
     }
@@ -39,7 +39,10 @@ const GameCard = ({gameData}) => {
         console.log(err);
       }
     }
-    fetchUser();
+    if(otherId){
+      fetchUser();
+    }
+    
   }, [otherId]);
 
   useEffect(()=>{

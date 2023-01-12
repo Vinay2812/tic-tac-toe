@@ -10,6 +10,7 @@ const GameReducer = (state = INITIAL_STATE, action)=>{
         case "GAME_UPDATE_START":
             return {...state, loading: true};
         case "GAME_UPDATE_SUCCESS":
+            
             return {...state, 
                 game: {
                     ...state.game, gameData: action.data

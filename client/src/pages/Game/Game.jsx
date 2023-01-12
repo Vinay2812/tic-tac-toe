@@ -6,9 +6,8 @@ import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getGame, updateMove } from "../../actions/GameAction";
-import { json, useParams } from "react-router-dom";
-
-import * as GameApi from "../../api/GameRequest";
+import { useParams } from "react-router-dom";
+import { getSocket } from "../../socketio";
 
 const Game = () => {
   const dispatch = useDispatch();
@@ -21,16 +20,18 @@ const Game = () => {
   const { loading } = useSelector((state) => state.AuthReducer);
 
   const { gameId } = useParams();
-
-  // function compareArray(a, b){
-  //   console.log(a, b);
-  //   return a.join() == b.join();
-  // }
-  // const [dataFetchComplete, setDataFetchComplete] = useState(null);
+  const socket = getSocket();
 
   useEffect(() => {
-      dispatch(getGame(gameId, opponentData._id));
+    socket.emit("join_room", gameId);
+    dispatch(getGame(gameId, opponentData._id));
   }, [gameId]);
+
+  useEffect(() => {
+    socket.on("start_game_update", () => {
+      dispatch(getGame(gameId, opponentData._id));
+    });
+  }, [socket]);
 
   function getUpdatedBoardPositions(arr) {
     const player1Positions = gameData.positions[0].places;
@@ -50,7 +51,7 @@ const Game = () => {
     if (!gameData) return arr;
     getUpdatedBoardPositions(arr);
     return arr;
-  }, [gameData, myId, loading]);
+  }, [gameData,loading]);
 
   const [tempBoardPositions, setTempBoardPositions] = useState(
     new Array(...[2, 2, 2, 2, 2, 2, 2, 2, 2])
@@ -60,23 +61,17 @@ const Game = () => {
   const [gameTitle, setGameTitle] = useState("");
 
   function getGameTitle() {
-    var title = "";
     if (gameData.isGameOn === true) {
-      if (gameData.currentTurn === myId) {
-        title = "Your move!";
-      } else {
-        title = `Their move!`;
-      }
+      return gameData.currentTurn === myId 
+      ? "Your move!" 
+      : "Their move!";
     } else {
-      if (gameData.winnerId === null) {
-        title = "Draw!";
-      } else if (gameData.winnerId === myId) {
-        title = "You win!";
-      } else {
-        title = "You loose!";
-      }
+      return gameData.winnerId === null
+        ? "Draw!"
+        : gameData.winnerId === myId
+        ? "You win!"
+        : "You loose!";
     }
-    return title;
   }
 
   useEffect(() => {
@@ -137,7 +132,10 @@ const Game = () => {
           otherId: opponentData._id,
           time: Date.now(),
         };
-        dispatch(updateMove(gameData?._id, currGameData));
+        dispatch(updateMove(gameId, currGameData)).then(() => {
+          socket.emit("update_game", gameId);
+        });
+
         break;
       }
     }

@@ -30,17 +30,22 @@ const io = new Server(server, {
 });
 
 io.on('connection', function (socket){
-    // socket.on("connect_error", (err)=>console.log(err))
+    // console.log("client connected");
     socket.on("join_room", (gameId)=>{
+        // console.log(`${gameId} joined`)
         socket.join(gameId);
     })
     socket.on("update_game", (gameId)=>{
-        console.log("update started");
+        // console.log("game update started");
         setTimeout(() => {
-            socket.emit("start_game_update");
-        }, 2000);
-        
+            socket.to(gameId).emit("start_game_update");
+        }, 100);
+           
     })
+
+    // socket.on("disconnect", (socket)=>{
+    //     console.log(`disconnected`);
+    // })
 });
 
 mongoose.set('strictQuery', false);
