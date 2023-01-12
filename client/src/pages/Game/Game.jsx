@@ -12,7 +12,7 @@ import { getSocket } from "../../socketio";
 const Game = () => {
   const dispatch = useDispatch();
   const gameData = useSelector((state) => state.GameReducer.game?.gameData);
-  const myId = useSelector((state) => state.AuthReducer.authData._id);
+  const myId = useSelector((state) => state.AuthReducer.authData?._id);
   const opponentData = useSelector(
     (state) => state.GameReducer.game?.opponentData
   );
@@ -24,12 +24,16 @@ const Game = () => {
 
   useEffect(() => {
     socket.emit("join_room", gameId);
-    dispatch(getGame(gameId, opponentData._id));
+    if(opponentData){
+      dispatch(getGame(gameId, opponentData?._id));
+    }
   }, [gameId]);
 
   useEffect(() => {
     socket.on("start_game_update", () => {
-      dispatch(getGame(gameId, opponentData._id));
+      if(opponentData){
+        dispatch(getGame(gameId, opponentData?._id));
+      }
     });
   }, [socket]);
 
