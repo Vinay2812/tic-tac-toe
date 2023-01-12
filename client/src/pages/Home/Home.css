@@ -33,7 +33,7 @@
 }
 
 .game-container{
-    position: relative;
+    /* position: relative; */
     margin-top: 20px;
     display: flex;
     padding-top: 4px;

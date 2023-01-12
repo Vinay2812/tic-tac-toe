@@ -5,8 +5,10 @@ import GridItem from "../../components/GridItem/GridItem";
 import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateMove } from "../../actions/GameAction";
+import { getGame, updateMove } from "../../actions/GameAction";
+import { json, useParams } from "react-router-dom";
 
+import * as GameApi from "../../api/GameRequest";
 
 const Game = () => {
   const dispatch = useDispatch();
@@ -18,11 +20,21 @@ const Game = () => {
   const opponentName = opponentData?.name;
   const { loading } = useSelector((state) => state.AuthReducer);
 
-  let boardPositions = useMemo(() => {
-    let arr = [2, 2, 2, 2, 2, 2, 2, 2, 2];
-    if (loading) return arr;
-    if (!gameData) return arr;
+  const { gameId } = useParams();
 
+  // function compareArray(a, b){
+  //   console.log(a, b);
+  //   return a.join() == b.join();
+  // }
+  // const [dataFetchComplete, setDataFetchComplete] = useState(null);
+
+  // useEffect(() => {
+  //   if(dataFetchComplete === false)return;
+
+    
+  // }, [dataFetchComplete, gameId]);
+
+  function getUpdatedBoardPositions(arr) {
     const player1Positions = gameData.positions[0].places;
     const player2Positions = gameData.positions[1].places;
 
@@ -30,11 +42,15 @@ const Game = () => {
       arr[position] = gameData.positions[0].id === myId ? 0 : 1;
     });
     player2Positions.forEach((position) => {
-      if (position >= 0) {
-        arr[position] = gameData.positions[0].id === myId ? 1 : 0;
-      }
+      arr[position] = gameData.positions[0].id === myId ? 1 : 0;
     });
+  }
 
+  let boardPositions = useMemo(() => {
+    let arr = [2, 2, 2, 2, 2, 2, 2, 2, 2];
+    if (loading) return arr;
+    if (!gameData) return arr;
+    getUpdatedBoardPositions(arr);
     return arr;
   }, [gameData, myId, loading]);
 
@@ -45,25 +61,31 @@ const Game = () => {
   const [myTurn, setMyTurn] = useState(false);
   const [gameTitle, setGameTitle] = useState("");
 
+  function getGameTitle() {
+    var title = "";
+    if (gameData.isGameOn === true) {
+      if (gameData.currentTurn === myId) {
+        title = "Your move!";
+      } else {
+        title = `Their move!`;
+      }
+    } else {
+      if (gameData.winnerId === null) {
+        title = "Draw!";
+      } else if (gameData.winnerId === myId) {
+        title = "You win!";
+      } else {
+        title = "You loose!";
+      }
+    }
+    return title;
+  }
+
   useEffect(() => {
     if (!gameData) return;
     setTempBoardPositions(new Array(...boardPositions));
     setMyTurn(gameData.currentTurn === myId);
-    if (gameData.isGameOn === true) {
-      if (gameData.currentTurn === myId) {
-        setGameTitle("Your move!");
-      } else {
-        setGameTitle(`Their move!`);
-      }
-    } else {
-      if (gameData.winnerId === null) {
-        setGameTitle("Draw!");
-      } else if (gameData.winnerId === myId) {
-        setGameTitle("You win!");
-      } else {
-        setGameTitle("You loose!");
-      }
-    }
+    setGameTitle(getGameTitle());
   }, [gameData, myId, boardPositions, opponentName]);
 
   function getGameStatus() {
@@ -126,7 +148,7 @@ const Game = () => {
   const gridPositions = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   return (
     <div className="container">
-      {loading ? (
+      {loading === true ? (
         <div>Loading....</div>
       ) : (
         <>

@@ -2,9 +2,6 @@
   margin: 0;
   padding: 0;
 }
-body{
-  overflow-y: hidden;
-}
 
 input{
   outline: none;
@@ -20,21 +17,23 @@ a{
 .app{
   background: #F5F5F5;
   width: 100%;
-  height: 100vh;
+  height: min(100%, 720px);
   display: flex;
-  position: relative;
+  /* position: relative; */
   align-items: center;
   justify-content: center;
   align-content: center;
-  /* overflow-y: hidden; */
+  overflow-y: scroll;
 }
 
 .container{
   width: 360px;
-  height: 100%;
+  height: 100vh;
   background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
   position: relative;
-  overflow: auto;
 }
 
 button{
