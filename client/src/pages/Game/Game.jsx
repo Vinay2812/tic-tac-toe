@@ -28,11 +28,9 @@ const Game = () => {
   // }
   // const [dataFetchComplete, setDataFetchComplete] = useState(null);
 
-  // useEffect(() => {
-  //   if(dataFetchComplete === false)return;
-
-    
-  // }, [dataFetchComplete, gameId]);
+  useEffect(() => {
+      dispatch(getGame(gameId, opponentData._id));
+  }, [gameId]);
 
   function getUpdatedBoardPositions(arr) {
     const player1Positions = gameData.positions[0].places;
