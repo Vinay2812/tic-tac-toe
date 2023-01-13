@@ -6,14 +6,18 @@ import * as path from 'path';
 import AuthRoute from "./routes/AuthRoute.js"
 import GameRoute from "./routes/GameRoute.js"
 import * as url from 'url';
-import { createServer } from "http"
+import { createServer } from "https"
 import { Server } from "socket.io";
+import fs from "fs";
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 dotenv.config()
 const app = express();
-const server = createServer(app);
+const server = createServer(app, {
+    key: fs.readFileSync("/tmp/key.pem"),
+    cert: fs.readFileSync("/tmp/cert.pem")
+});
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -27,6 +31,7 @@ const io = new Server(server, {
     cors: {
         origin: "*"
     },
+    pingTimeout: 60000
 });
 
 io.on('connection', function (socket){

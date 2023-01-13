@@ -33,5 +33,3 @@ Open [http://localhost:5000](http://localhost:5000) to view it in your browser.
 ## Deployed version of the  project
 
 Open [https://tic-tac-toe-by-vinay2812.up.railway.app/](https://tic-tac-toe-by-vinay2812.up.railway.app/) to view the live demo of the application
-
-Open [https://tic-tac-toe-by-vinay2812.vercel.app/](https://tic-tac-toe-by-vinay2812.vercel.app/) to view the live demo of the application
