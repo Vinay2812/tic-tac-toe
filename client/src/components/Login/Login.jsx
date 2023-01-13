@@ -9,7 +9,6 @@ const Login = () => {
   const [formData, setFormData] = useState({username: "", password: ""});
   const [submitClicked, setSubmitClicked] = useState(false);
   const {authFail} = useSelector((state)=>state.AuthReducer);
-  console.log(process.env.REACT_APP_AXIOS_BASE_URL)
 
   const handleChange = (e)=>{
     e.preventDefault();
