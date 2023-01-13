@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Home.css";
 import GameCard from "../../components/GameCard/GameCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getAllGames } from "../../api/GameRequest";
@@ -11,14 +11,18 @@ const Home = () => {
   const [allGames, setAllGames] = useState([]);
   const userId = useSelector((state) => state.AuthReducer.authData._id);
   const navigate = useNavigate();
+  const params = useParams();
   
   useEffect(() => {
-    const fetchGames = async () => {
+    async function fetchGames(){
       const { data } = await getAllGames(userId);
       setAllGames(data);
     };
-    fetchGames();
-  }, [userId]);
+    if(userId){
+      fetchGames();
+    }
+    
+  }, [userId, params]);
   
   const startNewGame = () => {
     navigate("/new-game");
