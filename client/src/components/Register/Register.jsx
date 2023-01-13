@@ -8,13 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Register = () => {
   const [formData, setFormData] = useState({name: "", username: "", email: "", password: ""});
+  const {authData, authFail} = useSelector((state)=>state.AuthReducer);
+  const [showEmail, setShowEmail] = useState(true);
+  const dispatch = useDispatch();
+
+  const {loading} = useSelector((state)=>state.AuthReducer);
 
   const handleChange = (e)=>{
     e.preventDefault();
     setFormData({...formData, [e.target.name]: e.target.value});
     setShowEmail(true);
   }
-  const dispatch = useDispatch();
 
   const handleSubmit = (e)=>{
     e.preventDefault();
@@ -22,10 +26,6 @@ const Register = () => {
       setShowEmail(authData === null && authFail === false);
     });
   }
-
-  const {authData, authFail} = useSelector((state)=>state.AuthReducer);
-
-  const [showEmail, setShowEmail] = useState(true);
 
   return (
     <div className="container">
@@ -81,11 +81,11 @@ const Register = () => {
         
         <button
           className="button register-btn"
-          disabled={!showEmail}
-          style={!showEmail ? { backgroundColor: "#E0E0E0" } : {}}
+          disabled={!showEmail || loading}
+          style={!showEmail || loading? { backgroundColor: "#E0E0E0" } : {}}
           onClick = {handleSubmit}
         >
-          Register
+          {loading ? "Loading..." : "Register"}
         </button>
       </div>
     </div>

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getGame, updateMove } from "../../actions/GameAction";
 import { useParams } from "react-router-dom";
 import { getSocket } from "../../socketio";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 const Game = () => {
   const dispatch = useDispatch();
@@ -147,12 +148,11 @@ const Game = () => {
 
   const gridPositions = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   return (
-    <div className="container">
-      
+     <div className="container">
           <ActionBar path="/home" />
           <div className="opponent">
             Game With{" "}
-            {opponentName?.length <= 8
+            {loading ? "Loading..." : opponentName?.length <= 8
               ? opponentName
               : opponentName?.substring(0, 7) + "..."}
           </div>
@@ -161,7 +161,7 @@ const Game = () => {
             <X width={9.86} height={44.39} dimension={64} />
           </div>
           <div className="game-area">
-            <div className="game-title">{gameTitle}</div>
+            <div className={`game-title ${loading? "loading" : ""}`}>{loading ? <LoadingSpinner width="15px" height="15px" /> : gameTitle}</div>
             <div className="grid-container">
               {gridPositions.map((position) => {
                 return (

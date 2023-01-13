@@ -12,7 +12,7 @@ const Auth = () => {
     navigate("/auth/register");
   }
   return (
-    <div class="container auth">
+    <div className="container auth">
       <div className="small-title">
         async
       </div>
