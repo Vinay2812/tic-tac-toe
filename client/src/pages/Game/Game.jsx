@@ -17,7 +17,7 @@ const Game = () => {
     (state) => state.GameReducer.game?.opponentData
   );
   const opponentName = opponentData?.name;
-  const { loading } = useSelector((state) => state.AuthReducer);
+  const { loading } = useSelector((state) => state.GameReducer);
 
   const { gameId } = useParams();
   const socket = getSocket();
@@ -124,17 +124,12 @@ const Game = () => {
         const updatedPosition = i;
         const gameSituation = getGameStatus();
         const currGameData = {
-          position: updatedPosition,
-          gameCompleted: gameSituation !== 2,
-          winnerId:
-            gameSituation === 0
-              ? myId
-              : gameSituation === 1
-              ? opponentData._id
-              : null,
-          myId,
-          otherId: opponentData._id,
-          time: Date.now(),
+            position: updatedPosition,
+            gameCompleted: gameSituation !== 2,
+            winnerId: gameSituation === 0 ? myId : gameSituation === 1 ? opponentData._id : null,
+            myId,
+            otherId: opponentData._id,
+            time: Date.now(),
         };
         dispatch(updateMove(gameId, currGameData)).then(() => {
           socket.emit("update_game", gameId);
