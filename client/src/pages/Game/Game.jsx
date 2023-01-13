@@ -148,10 +148,7 @@ const Game = () => {
   const gridPositions = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   return (
     <div className="container">
-      {loading === true ? (
-        <div>Loading....</div>
-      ) : (
-        <>
+      
           <ActionBar path="/home" />
           <div className="opponent">
             Game With{" "}
@@ -195,8 +192,6 @@ const Game = () => {
           >
             Submit
           </button>
-        </>
-      )}
     </div>
   );
 };

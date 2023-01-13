@@ -8,7 +8,6 @@ import GameRoute from "./routes/GameRoute.js"
 import * as url from 'url';
 import { createServer } from "http"
 import { Server } from "socket.io";
-import fs from "fs";
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
@@ -28,7 +27,6 @@ const io = new Server(server, {
     cors: {
         origin: "*"
     },
-    pingTimeout: 60000
 });
 
 io.on('connection', function (socket){
@@ -49,6 +47,7 @@ io.on('connection', function (socket){
     //     console.log(`disconnected`);
     // })
 });
+
 
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB || "mongodb+srv://vinay:brockvs28@cluster0.oldoz.mongodb.net/tic-tac-toe", ()=>{
