@@ -14,10 +14,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 dotenv.config()
 const app = express();
-const server = createServer(app, {
-    key: fs.readFileSync("/tmp/key.pem"),
-    cert: fs.readFileSync("/tmp/cert.pem")
-});
+const server = createServer(app);
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
