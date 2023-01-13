@@ -19,7 +19,7 @@ const Register = () => {
   const handleSubmit = (e)=>{
     e.preventDefault();
     dispatch(register(formData)).then(()=>{
-      setShowEmail(authData === null && !authFail);
+      setShowEmail(authData === null && authFail === false);
     });
   }
 

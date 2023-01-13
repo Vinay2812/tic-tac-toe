@@ -39,7 +39,7 @@ io.on('connection', function (socket){
         // console.log("game update started");
         setTimeout(() => {
             socket.to(gameId).emit("start_game_update");
-        }, 100);
+        }, 500);
            
     })
 

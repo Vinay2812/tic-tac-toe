@@ -11,10 +11,7 @@ const Home = () => {
   const [allGames, setAllGames] = useState([]);
   const userId = useSelector((state) => state.AuthReducer.authData._id);
   const navigate = useNavigate();
-  const startNewGame = () => {
-    navigate("/new-game");
-  };
-
+  
   useEffect(() => {
     const fetchGames = async () => {
       const { data } = await getAllGames(userId);
@@ -22,7 +19,10 @@ const Home = () => {
     };
     fetchGames();
   }, [userId]);
-
+  
+  const startNewGame = () => {
+    navigate("/new-game");
+  };
 
   return (
     <div className="container">

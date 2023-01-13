@@ -22,16 +22,24 @@ const Game = () => {
   const { gameId } = useParams();
   const socket = getSocket();
 
+  let boardPositions = useMemo(() => {
+    let arr = [2, 2, 2, 2, 2, 2, 2, 2, 2];
+    if (loading) return arr;
+    if (!gameData) return arr;
+    getUpdatedBoardPositions(arr);
+    return arr;
+  }, [gameData, loading]);
+
   useEffect(() => {
     socket.emit("join_room", gameId);
-    if(opponentData){
+    if (opponentData) {
       dispatch(getGame(gameId, opponentData?._id));
     }
   }, [gameId]);
 
   useEffect(() => {
     socket.on("start_game_update", () => {
-      if(opponentData){
+      if (opponentData) {
         dispatch(getGame(gameId, opponentData?._id));
       }
     });
@@ -49,13 +57,7 @@ const Game = () => {
     });
   }
 
-  let boardPositions = useMemo(() => {
-    let arr = [2, 2, 2, 2, 2, 2, 2, 2, 2];
-    if (loading) return arr;
-    if (!gameData) return arr;
-    getUpdatedBoardPositions(arr);
-    return arr;
-  }, [gameData,loading]);
+  
 
   const [tempBoardPositions, setTempBoardPositions] = useState(
     new Array(...[2, 2, 2, 2, 2, 2, 2, 2, 2])
@@ -66,9 +68,7 @@ const Game = () => {
 
   function getGameTitle() {
     if (gameData.isGameOn === true) {
-      return gameData.currentTurn === myId 
-      ? "Your move!" 
-      : "Their move!";
+      return gameData.currentTurn === myId ? "Your move!" : "Their move!";
     } else {
       return gameData.winnerId === null
         ? "Draw!"
@@ -124,12 +124,17 @@ const Game = () => {
         const updatedPosition = i;
         const gameSituation = getGameStatus();
         const currGameData = {
-            position: updatedPosition,
-            gameCompleted: gameSituation !== 2,
-            winnerId: gameSituation === 0 ? myId : gameSituation === 1 ? opponentData._id : null,
-            myId,
-            otherId: opponentData._id,
-            time: Date.now(),
+          position: updatedPosition,
+          gameCompleted: gameSituation !== 2,
+          winnerId:
+            gameSituation === 0
+              ? myId
+              : gameSituation === 1
+              ? opponentData._id
+              : null,
+          myId,
+          otherId: opponentData._id,
+          time: Date.now(),
         };
         dispatch(updateMove(gameId, currGameData)).then(() => {
           socket.emit("update_game", gameId);
@@ -170,6 +175,7 @@ const Game = () => {
                     tempBoardPositions={tempBoardPositions}
                     setTempBoardPositions={setTempBoardPositions}
                     myTurn={myTurn}
+                    isGameOn={gameData?.isGameOn}
                   />
                 );
               })}

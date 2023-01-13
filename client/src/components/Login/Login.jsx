@@ -3,22 +3,32 @@ import ActionBar from "../ActionBar/ActionBar";
 import Toast from "../Toast/Toast";
 import { useDispatch, useSelector } from "react-redux"
 import { login } from "../../actions/AuthAction";
+import { useEffect } from "react";
 
 const Login = () => {
   const [formData, setFormData] = useState({username: "", password: ""});
+  const [submitClicked, setSubmitClicked] = useState(false);
+  const {authFail} = useSelector((state)=>state.AuthReducer);
 
   const handleChange = (e)=>{
     e.preventDefault();
+    setSubmitClicked(false);
     setFormData({...formData, [e.target.name]: e.target.value})
   }
 
   const dispatch = useDispatch();
   const handleSubmit = (e)=>{
+    setSubmitClicked(true);
     e.preventDefault();
     dispatch(login(formData));
   }
 
-  const {authFail} = useSelector((state)=>state.AuthReducer);
+  useEffect(()=>{
+    if(authFail === false){
+      setSubmitClicked(false);
+    }
+  }, [authFail])
+  
 
   return (
     <div className="container">
@@ -45,7 +55,7 @@ const Login = () => {
           onChange={handleChange}
         />
         {
-          authFail ? <Toast backgroundColor="#EB5757" text="Enter correct details" /> : ""
+          authFail && submitClicked ? <Toast backgroundColor="#EB5757" text="Enter correct details" /> : ""
         }
         
         <button className="button register-btn" onClick={handleSubmit}>Login</button>

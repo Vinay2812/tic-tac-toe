@@ -1,14 +1,10 @@
 import O from "../O/O";
 import X from "../X/X";
 
-const GridItem = ({position, myTurn, boardPositions, tempBoardPositions, setTempBoardPositions})=>{
-    const XIcon = () => {
-        return <X width={16.2} height={72.89} dimension={105} />;
-      };
+const GridItem = ({position, myTurn, boardPositions, tempBoardPositions, setTempBoardPositions, isGameOn})=>{
+    const XIcon = () =>  <X width={16.2} height={72.89} dimension={105} />;
+    const OIcon = () => <O />;
       
-      const OIcon = () => {
-        return <O />;
-      };
     const getIcon = (position) => {
       switch (tempBoardPositions[position]) {
         case 0:
@@ -21,7 +17,7 @@ const GridItem = ({position, myTurn, boardPositions, tempBoardPositions, setTemp
     };
 
     const placeIcon = (position) => {
-      if (!myTurn || tempBoardPositions[position] !== 2) return;
+      if (!myTurn || tempBoardPositions[position] !== 2 || isGameOn === false) return;
       // to undo previous unsaved changed
       setTempBoardPositions(new Array(...boardPositions));
       //place icon on temp board
