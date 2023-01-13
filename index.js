@@ -6,7 +6,7 @@ import * as path from 'path';
 import AuthRoute from "./routes/AuthRoute.js"
 import GameRoute from "./routes/GameRoute.js"
 import * as url from 'url';
-import { createServer } from "https"
+import { createServer } from "http"
 import { Server } from "socket.io";
 import fs from "fs";
 
